@@ -7,6 +7,16 @@ a {
   color: #00B7FF;
 }
 
+.img{
+  width:200px;
+  margin-left: 20px;
+}
+.youtube{
+  margin-left: 20px;
+  width: 200px;
+  height: 150px;
+}
+
 #vsebina {
   width: 100%;
   margin-left: auto;
@@ -57,3 +67,4 @@ a {
 #pomoc {
   font: 10px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
+

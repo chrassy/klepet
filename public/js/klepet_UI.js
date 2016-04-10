@@ -1,9 +1,19 @@
 function divElementEnostavniTekst(sporocilo) {
   var jeSmesko = sporocilo.indexOf('http://sandbox.lavbic.net/teaching/OIS/gradivo/') > -1;
+  var jeSlika = sporocilo.search("alt=\"slika\"") > -1;
+  var jeYoutube = sporocilo = sporocilo.indexOf('https://www.youtube.com/embed/') > -1;
+  
   if (jeSmesko) {
     sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace('&lt;img', '<img').replace('png\' /&gt;', 'png\' />');
     return $('<div style="font-weight: bold"></div>').html(sporocilo);
-  } else {
+  }
+   else if(jeSlika) {
+     return $('<div style="font-weight: bold"></div>').html(sporocilo);
+   }
+   else if(jeYoutube) {
+     return $('<div style="font-weight: bold"></div>').html(sporocilo);
+   }
+   else {
     return $('<div style="font-weight: bold;"></div>').text(sporocilo);
   }
 }
@@ -15,6 +25,8 @@ function divElementHtmlTekst(sporocilo) {
 function procesirajVnosUporabnika(klepetApp, socket) {
   var sporocilo = $('#poslji-sporocilo').val();
   sporocilo = dodajSmeske(sporocilo);
+  sporocilo = dodajSlike(sporocilo);
+  sporocilo = dodajYoutube(sporocilo);
   var sistemskoSporocilo;
 
   if (sporocilo.charAt(0) == '/') {
@@ -113,7 +125,6 @@ $(document).ready(function() {
     return false;
   });
   
-  
 });
 
 function dodajSmeske(vhodnoBesedilo) {
@@ -131,3 +142,22 @@ function dodajSmeske(vhodnoBesedilo) {
   }
   return vhodnoBesedilo;
 }
+
+  function dodajSlike(vhodnoBesedilo) {
+   var regex = "(http|https)://.+(.jpg|.gif|.png)";
+   vhodnoBesedilo = vhodnoBesedilo.replace(new RegExp(regex, "gi"), function(link) {
+     var htmlElement = "<img src=\""+link+"\" alt=\"slika\" class=\"img\">";
+     return htmlElement;
+   })
+   
+   return vhodnoBesedilo;
+ }
+ 
+ function dodajYoutube(vhodnoBesedilo){
+   var youtubeRegex= /https:\/\/www\.youtube\.com\/watch\?v=(.{11})/gi;
+   if(youtubeRegex.test(vhodnoBesedilo)){
+     vhodnoBesedilo = vhodnoBesedilo.replace(youtubeRegex, '<iframe class="youtube" src="https://www.youtube.com/embed/$1" allowfullscreen></iframe>');
+   }
+   return vhodnoBesedilo;
+ }
+  
